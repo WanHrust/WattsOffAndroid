@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">WattsOff</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_firstname">First name</string>
+    <string name="hint_lastname">Last Name</string>
+    <string name="hint_city">City</string>
+    <string name="hint_street">Street</string>
+    <string name="hint_name">Fullname</string>
+    <string name="btn_login">LOGIN</string>
+    <string name="btn_register">REGISTER</string>
+    <string name="btn_link_to_register">Not a member? Sign up now.</string>
+    <string name="btn_link_to_login">Already registred! Login Me.</string>
+    <string name="welcome">Welcome</string>
+    <string name="btn_logout">LOGOUT</string>
+    <string name="name">Fullname</string>
+    <string name="serverName">https://serene-plains-22803.herokuapp.com/</string>
+    <string name="button5W">Lightbulb (5W)</string>
+    <string name="button50W">Boiler (50W)</string>
+    <string name="LightBulb">Light Bulb</string>
+    <string name="Oven">Oven</string>
+    <string name="Boiler">Boiler</string>
+    <string name="Other">Other</string>
+    <string name="NotHome">Not home :(</string>
+    <string name="Submit">Submit</string>
+    <string name="Wrequired">W required</string>
+    <string name="OutOf">Out of: </string>
+
+</resources>
