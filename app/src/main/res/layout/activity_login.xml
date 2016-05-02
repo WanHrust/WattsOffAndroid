@@ -72,6 +72,8 @@
             android:background="@null"
             android:text="Forgot Password"
             android:textAlignment="center"
+            android:visibility="invisible"
+            android:clickable="false"
             android:textAllCaps="false"
             android:textColor="#ffffff" />
     </LinearLayout>

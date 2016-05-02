@@ -24,6 +24,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class ProfileActivity extends Activity {
 
 
     SharedPreferences pref;
-    String token, grav, oldpasstxt, newpasstxt, userLogged, userEmail;
+    String token, grav, oldpasstxt, newpasstxt, userLogged, userEmail, totalContribution, totalRequiredAmount;
     WebView web;
     TextView tvMain, tvProgressPercent, tvRequiredAmaunt;
     Button chgpass, chgpassfr, cancel, logout, btnSubmit, action50W, btnNotHome;
@@ -54,7 +55,13 @@ public class ProfileActivity extends Activity {
 
                             @Override
                             public void run() {
-                                tvProgressPercent.setText(i++ % 100 + "%");
+                                if (totalContribution != null && !totalContribution.isEmpty()) {
+                                    float result = Float.valueOf(totalContribution) / Float.valueOf(totalRequiredAmount) * 100;
+                                    tvProgressPercent.setText(String.valueOf(new DecimalFormat("#.##").format(result)) + "%");
+                                } else {
+                                    tvProgressPercent.setText(" ");
+                                }
+
                             }
                         });
                         Thread.sleep(300);
@@ -111,36 +118,7 @@ public class ProfileActivity extends Activity {
         chkBoxLightBulb = (CheckBox) findViewById(R.id.chkBoxLightBulb);
 
 
-        Bundle bundle = getIntent().getExtras();
-        String gcmMessage = "";
-        tvMain.setText("Penguins are safe!");
-        if (bundle != null) {
-            gcmMessage = bundle.getString("gcmmessage");
-        }
-        if (gcmMessage != null && !gcmMessage.isEmpty()) {
-
-            String requiedAmount = bundle.getString("gcmrequiredamount");
-            tvMain.setText(gcmMessage);
-            tvRequiredAmaunt.setText(requiedAmount);
-            if (!btnSubmit.isEnabled()) btnSubmit.setEnabled(true);
-            if (btnSubmit.getVisibility() != View.VISIBLE) btnSubmit.setVisibility(View.VISIBLE);
-            if (!btnNotHome.isEnabled()) btnNotHome.setEnabled(true);
-            if (btnNotHome.getVisibility() != View.VISIBLE) btnNotHome.setVisibility(View.VISIBLE);
-//            if (!action50W.isEnabled()) action50W.setEnabled(true);
-//            if (action50W.getVisibility() != View.VISIBLE)
-//                action50W.setVisibility(View.VISIBLE);
-
-
-        } else {
-            tvMain.setText("Penguins are safe!");
-            if (btnSubmit.isEnabled()) btnSubmit.setEnabled(false);
-            if (btnSubmit.getVisibility() == View.VISIBLE) btnSubmit.setVisibility(View.GONE);
-            if (btnNotHome.isEnabled()) btnNotHome.setEnabled(false);
-            if (btnNotHome.getVisibility() == View.VISIBLE) btnNotHome.setVisibility(View.GONE);
-            tvRequiredAmaunt.setText("");
-//            if (action50W.isEnabled()) action50W.setEnabled(false);
-////            if (action50W.getVisibility() == View.VISIBLE) action50W.setVisibility(View.GONE);
-        }
+        updateUI();
 
 
         logout.setOnClickListener(new View.OnClickListener() {
@@ -211,6 +189,7 @@ public class ProfileActivity extends Activity {
                         String jsonstr = json.getString("response");
                         if (json.getBoolean("res")) {
                             Toast.makeText(getApplication(), jsonstr, Toast.LENGTH_SHORT).show();
+                            totalContribution = jsonstr;
                         } else {
                             Toast.makeText(getApplication(), jsonstr, Toast.LENGTH_SHORT).show();
 
@@ -248,6 +227,7 @@ public class ProfileActivity extends Activity {
                         String jsonstr = json.getString("response");
                         if (json.getBoolean("res")) {
                             Toast.makeText(getApplication(), jsonstr, Toast.LENGTH_SHORT).show();
+                            totalContribution = jsonstr;
                         } else {
                             Toast.makeText(getApplication(), jsonstr, Toast.LENGTH_SHORT).show();
 
@@ -326,6 +306,45 @@ public class ProfileActivity extends Activity {
 //        });
 
         progressThread();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUI();
+    }
+
+    void updateUI() {
+        Bundle bundle = this.getIntent().getExtras();
+        String gcmMessage = "";
+        tvMain.setText("Penguins are safe!");
+        if (bundle != null) {
+            gcmMessage = bundle.getString("gcmmessage");
+        }
+        if (gcmMessage != null && !gcmMessage.isEmpty()) {
+
+            totalRequiredAmount = bundle.getString("gcmrequiredamount");
+            tvMain.setText(gcmMessage);
+            tvRequiredAmaunt.setText(totalRequiredAmount);
+            if (!btnSubmit.isEnabled()) btnSubmit.setEnabled(true);
+            if (btnSubmit.getVisibility() != View.VISIBLE) btnSubmit.setVisibility(View.VISIBLE);
+            if (!btnNotHome.isEnabled()) btnNotHome.setEnabled(true);
+            if (btnNotHome.getVisibility() != View.VISIBLE) btnNotHome.setVisibility(View.VISIBLE);
+//            if (!action50W.isEnabled()) action50W.setEnabled(true);
+//            if (action50W.getVisibility() != View.VISIBLE)
+//                action50W.setVisibility(View.VISIBLE);
+            bundle.putString("gcmmessage", "");
+
+        } else {
+            tvMain.setText("Penguins are safe!");
+            if (btnSubmit.isEnabled()) btnSubmit.setEnabled(false);
+            if (btnSubmit.getVisibility() == View.VISIBLE) btnSubmit.setVisibility(View.GONE);
+            if (btnNotHome.isEnabled()) btnNotHome.setEnabled(false);
+            if (btnNotHome.getVisibility() == View.VISIBLE) btnNotHome.setVisibility(View.GONE);
+            tvRequiredAmaunt.setText("");
+//            if (action50W.isEnabled()) action50W.setEnabled(false);
+////            if (action50W.getVisibility() == View.VISIBLE) action50W.setVisibility(View.GONE);
+        }
     }
 
 }
