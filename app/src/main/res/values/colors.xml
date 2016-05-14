@@ -20,4 +20,6 @@
     <color name="btn_logut_bg">#ff6861</color>
     <color name="btnSubmit_bg">#32da56</color>
     <color name="btnNotHome_bg">#fb6a37</color>
+    <color name="actionbar_green">#2DBB28</color>
+    <color name="actionbar_green1">#08E700</color>
 </resources>

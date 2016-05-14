@@ -5,11 +5,15 @@ package rustamav.wattsoff.com;
  * Created by Rustam on 3/6/2016.
  */
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -28,7 +32,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActionActivity extends Activity {
+public class ActionActivity extends AppCompatActivity {
 
 
     SharedPreferences pref;
@@ -88,8 +92,6 @@ public class ActionActivity extends Activity {
         super.onCreate(savedInstanceState);
 
 
-//        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-//        setSupportActionBar(myToolbar);
 
         pref = getSharedPreferences("AppPref", MODE_PRIVATE);
         token = pref.getString("token", "");
@@ -118,7 +120,7 @@ public class ActionActivity extends Activity {
         tvMain = (TextView) findViewById(R.id.textViewMain);
 
         tvProgressPercent = (TextView) findViewById(R.id.tvProgressPercent);
-        tvRequiredAmaunt = (TextView) findViewById(R.id.tvRequiredAmount);
+        //tvRequiredAmaunt = (TextView) findViewById(R.id.tvRequiredAmount);
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
         btnNotHome = (Button) findViewById(R.id.btnNotHome);
         //action50W = (Button) findViewById(R.id.button50W);
@@ -134,6 +136,8 @@ public class ActionActivity extends Activity {
 
         llLightBulb = (LinearLayout) findViewById(R.id.llLightBulb);
         chkBoxLightBulb = (CheckBox) findViewById(R.id.chkBoxLightBulb);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
 
 
         tvProgressPercent.setText(" ");
@@ -329,7 +333,7 @@ public class ActionActivity extends Activity {
 //                dlg.show();
 //            }
 //        });
-
+        setSupportActionBar(myToolbar);
         progressThread();
     }
 
@@ -340,12 +344,10 @@ public class ActionActivity extends Activity {
     }
 
     void updateUI() {
-        Bundle bundle = this.getIntent().getExtras();
-        String gcmMessage = "";
+        String gcmMessage = pref.getString("gcmmessage", "");
         tvMain.setText("Penguins are safe!");
 
         String state = pref.getString("state", "");
-
 
 //        if (bundle != null) {
 //            gcmMessage = bundle.getString("gcmmessage");
@@ -356,7 +358,7 @@ public class ActionActivity extends Activity {
             //totalRequiredAmount = bundle.getString("gcmrequiredamount");
             totalRequiredAmount = pref.getString("requiredAmount", "");
             tvMain.setText(gcmMessage);
-            tvRequiredAmaunt.setText(totalRequiredAmount);
+            //tvRequiredAmaunt.setText(totalRequiredAmount);
             if (!btnSubmit.isEnabled()) btnSubmit.setEnabled(true);
             if (btnSubmit.getVisibility() != View.VISIBLE)
                 btnSubmit.setVisibility(View.VISIBLE);
@@ -374,34 +376,41 @@ public class ActionActivity extends Activity {
             if (btnSubmit.getVisibility() == View.VISIBLE) btnSubmit.setVisibility(View.GONE);
             if (btnNotHome.isEnabled()) btnNotHome.setEnabled(false);
             if (btnNotHome.getVisibility() == View.VISIBLE) btnNotHome.setVisibility(View.GONE);
-            tvRequiredAmaunt.setText("");
+            //tvRequiredAmaunt.setText("");
 //            if (action50W.isEnabled()) action50W.setEnabled(false);
 ////            if (action50W.getVisibility() == View.VISIBLE) action50W.setVisibility(View.GONE);
         }
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.action_logout:
-//                // User chose the "Settings" item, show the app settings UI...
-//                SharedPreferences.Editor edit = pref.edit();
-//                //Storing Data using SharedPreferences
-//                edit.putString("token", "");
-//                edit.remove("userLogged");
-//                edit.commit();
-//                Intent loginactivity = new Intent(ActionActivity.this, LoginActivity.class);
-//
-//                startActivity(loginactivity);
-//                finish();
-//                return true;
-//
-//            default:
-//                // If we got here, the user's action was not recognized.
-//                // Invoke the superclass to handle it.
-//                return super.onOptionsItemSelected(item);
-//
-//        }
-//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.actionbar_logout:
+                // User chose the "Settings" item, show the app settings UI...
+                SharedPreferences.Editor edit = pref.edit();
+                //Storing Data using SharedPreferences
+                edit.putString("token", "");
+                edit.remove("userLogged");
+                edit.commit();
+                Intent loginactivity = new Intent(ActionActivity.this, LoginActivity.class);
+
+                startActivity(loginactivity);
+                finish();
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.action_menu, menu);
+        return true;
+    }
 
 }

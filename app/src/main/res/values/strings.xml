@@ -38,5 +38,8 @@
     <string name="Submit">Submit</string>
     <string name="Wrequired">W required</string>
     <string name="OutOf">Out of: </string>
+    <string name="Percent">Percent</string>
+    <string name="OfPenguinsSaved">Of penguins \n saved</string>
+
 
 </resources>
