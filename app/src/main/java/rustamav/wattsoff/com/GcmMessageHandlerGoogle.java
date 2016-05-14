@@ -8,6 +8,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
@@ -19,11 +20,30 @@ public class GcmMessageHandlerGoogle extends GcmListenerService {
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        String message = data.getString("message");
-        String title = data.getString("title");
-        String requiredAmount = data.getString("requiredAmount");
-        //Log.d("GCM*", message);
-        createNotification(title, message, requiredAmount);
+        SharedPreferences pref = getSharedPreferences("AppPref", MODE_PRIVATE);
+        String messageType = data.getString("messageType");
+        SharedPreferences.Editor edit = pref.edit();
+        //Storing Data using SharedPreferences
+
+        if (messageType.equalsIgnoreCase("actionStarted")) {
+            String message = data.getString("message");
+            String title = data.getString("title");
+            String requiredAmount = data.getString("requiredAmount");
+
+            edit.putString("state", "actionStarted");
+            edit.putString("requiredAmount", requiredAmount);
+            edit.commit();
+            //Log.d("GCM*", message);
+            createNotification(title, message, requiredAmount);
+        } else if (messageType.equalsIgnoreCase("actionEnd")) {
+            edit.putString("state", "actionEnded");
+            edit.commit();
+        } else if (messageType.equalsIgnoreCase("progress")) {
+            String totalContribution = data.getString("message");
+            edit.putString("totalAmountContributed", totalContribution);
+            edit.commit();
+        }
+
     }
 
     // Creates notification based on title and body received
@@ -34,7 +54,7 @@ public class GcmMessageHandlerGoogle extends GcmListenerService {
                 .setContentText(body);
 
 
-        Intent resultIntent = new Intent(this, ProfileActivity.class);
+        Intent resultIntent = new Intent(this, ActionActivity.class);
         resultIntent.putExtra("gcmmessage", body);
         resultIntent.putExtra("gcmrequiredamount", requiredAmount);
         PendingIntent resultPendingIntent =

@@ -81,7 +81,7 @@ public class LoginActivity extends Activity {
                             edit.putString("userLogged", "user1");
                             edit.putString("userEmail", emailtxt);
                             edit.commit();
-                            Intent profactivity = new Intent(LoginActivity.this, ProfileActivity.class);
+                            Intent profactivity = new Intent(LoginActivity.this, ActionActivity.class);
 
                             startActivity(profactivity);
                             finish();
