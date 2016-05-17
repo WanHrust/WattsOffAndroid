@@ -198,9 +198,9 @@ public class ActionActivity extends AppCompatActivity {
 
                 int totalPower = 0;
 
-                if (chkBoxOven.isChecked()) totalPower += 500;
-                if (chkBoxLightBulb.isChecked()) totalPower += 5;
-                if (chkBoxBoiler.isChecked()) totalPower += 1000;
+                if (chkBoxOven.isChecked()) totalPower += 20;
+                if (chkBoxLightBulb.isChecked()) totalPower += 35;
+                if (chkBoxBoiler.isChecked()) totalPower += 130;
 
                 params = new ArrayList<NameValuePair>();
                 params.add(new BasicNameValuePair("action", String.valueOf(totalPower)));

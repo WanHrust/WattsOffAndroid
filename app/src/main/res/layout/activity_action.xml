@@ -13,7 +13,7 @@
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/activity_bar_height"
-        android:background="@color/actionbar_green1"
+        android:background="#9EBF6D"
         android:elevation="4dp"
         android:theme="@style/AppTheme"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
@@ -192,7 +192,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/Boiler"
+                android:text="@string/ActionList2"
                 android:textColor="#000000"
                 android:textSize="20dp" />
 
@@ -230,7 +230,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/Oven"
+                android:text="@string/ActionList3"
                 android:textColor="#000000"
                 android:textSize="20dp" />
 
@@ -269,7 +269,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/LightBulb"
+                android:text="@string/ActionList1"
                 android:textColor="#000000"
                 android:textSize="20dp" />
 

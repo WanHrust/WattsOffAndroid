@@ -40,6 +40,9 @@
     <string name="OutOf">Out of: </string>
     <string name="Percent">Percent</string>
     <string name="OfPenguinsSaved">Of penguins \n saved</string>
+    <string name="ActionList1">Light Bulb</string>
+    <string name="ActionList2">TV, computer</string>
+    <string name="ActionList3">Printer, Hifi station</string>
 
 
 </resources>
