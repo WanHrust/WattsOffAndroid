@@ -23,6 +23,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mikhaellopez.circularprogressbar.CircularProgressBar;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
@@ -31,6 +33,7 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 public class ActionActivity extends AppCompatActivity {
 
@@ -38,7 +41,9 @@ public class ActionActivity extends AppCompatActivity {
     SharedPreferences pref;
     String token, grav, oldpasstxt, newpasstxt, userLogged, userEmail, totalContribution, totalRequiredAmount, applicationState;
     WebView web;
-    TextView tvMain, tvProgressPercent, tvRequiredAmaunt;
+    TextView tvMain, tvProgressPercent, tvRequiredAmaunt, tvTimer, tvTimeLeftToAct;
+    boolean timerOn = false, timerStarted = false;
+    long startTime, endTime;
     Button chgpass, chgpassfr, cancel, logout, btnSubmit, action50W, btnNotHome;
     LinearLayout llLightBulb, llOven, llBoiler, llOther, llNotHome;
     CheckBox chkBoxLightBulb, chkBoxOven, chkBoxBoiler, chkBoxOther, chkBoxNotHome;
@@ -48,6 +53,11 @@ public class ActionActivity extends AppCompatActivity {
     List<NameValuePair> params;
     String serverName;
     int i = 0;
+    int animationDuration = 2500; // 2500ms = 2,5s
+
+    Timer timer;
+
+    CircularProgressBar circularProgressBar;
 
     private void progressThread() {
 
@@ -62,16 +72,27 @@ public class ActionActivity extends AppCompatActivity {
                                 String state = pref.getString("state", "");
                                 updateUI();
                                 if (state.equalsIgnoreCase("actionStarted") || state.equalsIgnoreCase("acted")) {
+                                    controlTimer(true);
+//                                    if (state.equalsIgnoreCase("acted")) {
+//                                        tvTimer.setText(" ");
+//                                        tvTimeLeftToAct.setText(" ");
+//                                    }
                                     totalContribution = pref.getString("totalAmountContributed", "");
                                     if (totalContribution != null && !totalContribution.isEmpty()) {
                                         if (totalRequiredAmount == null || (totalRequiredAmount != null && totalRequiredAmount.isEmpty()))
                                             totalRequiredAmount = "1";
                                         float result = Float.valueOf(totalContribution) / Float.valueOf(totalRequiredAmount) * 100;
                                         tvProgressPercent.setText(String.valueOf(new DecimalFormat("#.##").format(result)) + "%");
+                                        circularProgressBar.setProgressWithAnimation(result, animationDuration); // Default duration = 1500ms
+//                                        donutProgress.setProgress((int) result);
+
                                         //Toast.makeText(getApplication(), String.valueOf(new DecimalFormat("#.##").format(result)) + "%", Toast.LENGTH_SHORT).show();
                                     }
                                 } else if (state.equalsIgnoreCase("actionEnded")) {
                                     tvProgressPercent.setText(" ");
+                                    tvTimer.setText(" ");
+                                    circularProgressBar.setProgressWithAnimation(0, animationDuration);
+                                    controlTimer(false);
                                 }
 
                             }
@@ -94,6 +115,8 @@ public class ActionActivity extends AppCompatActivity {
 
 
         pref = getSharedPreferences("AppPref", MODE_PRIVATE);
+
+
         token = pref.getString("token", "");
         grav = pref.getString("grav", "");
         userLogged = pref.getString("userLogged", "");
@@ -113,11 +136,16 @@ public class ActionActivity extends AppCompatActivity {
             finish();
 
         }
+
+
         setContentView(R.layout.activity_action);
         //web = (WebView) findViewById(R.id.webView);
         chgpass = (Button) findViewById(R.id.chgbtn);
         logout = (Button) findViewById(R.id.logout);
         tvMain = (TextView) findViewById(R.id.textViewMain);
+
+        tvTimer = (TextView) findViewById(R.id.tvTimer);
+        tvTimeLeftToAct = (TextView) findViewById(R.id.tvTimeLeftToAct);
 
         tvProgressPercent = (TextView) findViewById(R.id.tvProgressPercent);
         //tvRequiredAmaunt = (TextView) findViewById(R.id.tvRequiredAmount);
@@ -140,9 +168,24 @@ public class ActionActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
 
 
+        if (!pref.contains("state")) {
+            if (btnNotHome.getVisibility() == View.VISIBLE)
+                btnNotHome.setVisibility(View.INVISIBLE);
+            if (btnSubmit.getVisibility() == View.VISIBLE) btnSubmit.setVisibility(View.INVISIBLE);
+            pref.edit().putString("state", "actionEnded");
+        }
+
+
         tvProgressPercent.setText(" ");
+        tvTimeLeftToAct.setText(" ");
+        tvTimer.setText(" ");
 
         updateUI();
+        timer = new Timer();
+
+
+        circularProgressBar = (CircularProgressBar) findViewById(R.id.donut_progress);
+
 
 
         logout.setOnClickListener(new View.OnClickListener() {
@@ -340,6 +383,12 @@ public class ActionActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        if (!pref.contains("state")) {
+            if (btnNotHome.getVisibility() == View.VISIBLE)
+                btnNotHome.setVisibility(View.INVISIBLE);
+            if (btnSubmit.getVisibility() == View.VISIBLE) btnSubmit.setVisibility(View.INVISIBLE);
+            pref.edit().putString("state", "actionEnded");
+        }
         updateUI();
     }
 
@@ -379,6 +428,8 @@ public class ActionActivity extends AppCompatActivity {
             //tvRequiredAmaunt.setText("");
 //            if (action50W.isEnabled()) action50W.setEnabled(false);
 ////            if (action50W.getVisibility() == View.VISIBLE) action50W.setVisibility(View.GONE);
+        } else if (state.equalsIgnoreCase("acted")) {
+            tvMain.setText("Penguins appreciate your help!");
         }
     }
 
@@ -411,6 +462,34 @@ public class ActionActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_menu, menu);
         return true;
+    }
+
+    public void controlTimer(boolean timerOn) {
+        if (timerOn) {
+            if (!timerStarted) {
+                startTime = System.currentTimeMillis();
+                long timeLength = Long.valueOf(pref.getString("timeToAct", ""));
+                endTime = startTime + timeLength * 60000; // Minutes * 60 milliseconds
+                timerStarted = true;
+                tvTimeLeftToAct.setText(R.string.TimeLeftToAct);
+            } else {
+
+            }
+            long millis = System.currentTimeMillis() - startTime;
+            long millisLeft = endTime - System.currentTimeMillis();
+            int seconds = (int) (millis / 1000);
+            int secondsLeft = (int) (millisLeft / 1000);
+            int minutesLeft = secondsLeft / 60;
+            int minutes = seconds / 60;
+            seconds = seconds % 60;
+            secondsLeft = secondsLeft % 60;
+
+            tvTimer.setText(String.format("%02d:%02d", minutesLeft, secondsLeft));
+        } else {
+            timerStarted = false;
+            tvTimer.setText(" ");
+            tvTimeLeftToAct.setText(" ");
+        }
     }
 
 }

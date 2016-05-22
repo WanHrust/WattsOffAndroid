@@ -29,10 +29,12 @@ public class GcmMessageHandlerGoogle extends GcmListenerService {
             String message = data.getString("message");
             String title = data.getString("title");
             String requiredAmount = data.getString("requiredAmount");
+            String time = data.getString("time");
 
             edit.putString("state", "actionStarted");
             edit.putString("requiredAmount", requiredAmount);
             edit.putString("gcmmessage", message);
+            edit.putString("timeToAct", time);
             edit.commit();
             //Log.d("GCM*", message);
             createNotification(title, message, requiredAmount);

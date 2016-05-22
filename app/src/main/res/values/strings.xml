@@ -43,6 +43,7 @@
     <string name="ActionList1">Light Bulb</string>
     <string name="ActionList2">TV, computer</string>
     <string name="ActionList3">Printer, Hifi station</string>
+    <string name="TimeLeftToAct">Time left to act</string>
 
 
 </resources>
