@@ -22,4 +22,5 @@
     <color name="btnNotHome_bg">#fb6a37</color>
     <color name="actionbar_green">#2DBB28</color>
     <color name="actionbar_green1">#08E700</color>
+    <color name="menu_background">#0DD138</color>
 </resources>

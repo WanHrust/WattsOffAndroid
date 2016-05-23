@@ -13,9 +13,9 @@
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/activity_bar_height"
-        android:background="#9EBF6D"
+        android:background="@color/menu_background"
         android:elevation="4dp"
-        android:theme="@style/AppTheme"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <RelativeLayout

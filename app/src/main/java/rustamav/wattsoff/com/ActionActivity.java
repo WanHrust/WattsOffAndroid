@@ -425,6 +425,7 @@ public class ActionActivity extends AppCompatActivity {
             if (btnSubmit.getVisibility() == View.VISIBLE) btnSubmit.setVisibility(View.GONE);
             if (btnNotHome.isEnabled()) btnNotHome.setEnabled(false);
             if (btnNotHome.getVisibility() == View.VISIBLE) btnNotHome.setVisibility(View.GONE);
+
             //tvRequiredAmaunt.setText("");
 //            if (action50W.isEnabled()) action50W.setEnabled(false);
 ////            if (action50W.getVisibility() == View.VISIBLE) action50W.setVisibility(View.GONE);
